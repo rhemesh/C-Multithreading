@@ -1,0 +1,119 @@
+
+Git:
+
+->If we want to check git version. ->git --version
+->if we want to list the credentials ->git config --global --list
+->if we want to set the name and a email id ->git config --global user.name "Hemesh"
+					    ->git config --global user.email "hemeshr07@gmail.com"
+
+->If we want to check the status of the git ->git status
+->To create empty git Local repository ->git init
+->If we want to change branch name from master to any other name it can be demo,main etc., ->git init -b main
+
+
+->Initially all the files will be in local working directory,
+->if we want to move it to local git repository we need to add that files to stagging ->git add filename_with_extension.
+										      ->git add file1.txt
+->Using ->git log we can check all the initial commits
+
+->Once we have added file to stagging and if we want to unstage that file we can use the command ->git rm --cached filename
+												 ->git rm --cached file1.txt
+
+->If we want keep track on our file,we need to commit it after stagging that can be done using the command ->git commit -m "This is my program"
+													   ->Here we need to add message regarding the commit then only it will commit sucessfully.
+
+->after commiting the file,the same file if we are modifying in our working directory then it should be moved to stagging then we need to commit that file to save in local git repository
+
+->If we don't to move to stagging and we want to commit directly then we have use this command ->git commit -a -m "message"
+
+->If we modified anything in code and if we want to check what are the difference then we can use the command ->git diff
+
+->and after making that modified code to stagging then If we check git diff we can find any difference and If we want to check difference after stagging we need to use command ->git diff --stagged
+
+
+
+
+
+
+
+
+
+
+
+
+->We can use the command ->git clone http link ->to copy the code
+
+->Initially for each device we need to create ssh key to communicate with remote host from local.we need to use the command ->ssh-keygen -o
+->It should be done only once
+
+for creating new repository on the command line and pushing the code 
+echo "# CPP-Multithreading" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/rhemesh/CPP-Multithreading.git
+git push -u origin main
+
+
+…or push an existing repository from the command line
+git remote add origin https://github.com/rhemesh/CPP-Multithreading.git
+git branch -M main
+git push -u origin main
+
+
+->Here after pushing first time and then
+->Initially we will create one file,Move that file to staging and then commit after commiting the file,next we need to push that.so then only it moved to remote git.
+->Command to push ->git push origin main
+->Here origin represents the url which we have used before.
+
+
+->we can check a origin of remote git by using the command ->git remote -v
+origin  https://github.com/rhemesh/CPP-Multithreading.git (fetch)
+origin  https://github.com/rhemesh/CPP-Multithreading.git (push)
+
+These are the two commands we can use for pushing and fetching from the remote git
+
+->we can change the name of the origin.
+
+Tagging:
+->Tags are used to give version number after some commits,for eg after doing some commits if we want to give release of any version so that can be achieved by using these tags.
+->We can check the tags by using the command 
+
+Tags are two types:annotated tagging and lightweight tagging
+->If we want to give more information about the user and who commited and all then we can use annotated.
+->We can use the command ->git tag -a 1.0 -m "first tag"
+->Command ->git tag can view the total tags created
+->command ->git show 1.0 It shows the description about the tag
+->After creating tags we need to push this tags to remote git by using the command ->git push origin 1.0
+->This tags now we can view in the git remote site ie Git Hub
+
+
+->To clone the other code we use command in the terminal ->git clone HTTP-Link
+->To view only in one line all the git logs then use the command ->git log --prety=oneline
+
+Branches:
+
+->We can create multiple branches like main and work on different feature for any type .
+->First we need to create a branch to work on another branch we can use the command to create branch using terminal ->git checkout -b feature1
+->and we can also use switch instead of checkout
+->we can also check total nuber of branches present and current branch using the command ->git branch
+->which has * that represents current branch
+->If we want to swaitch again to main branch then we can use the command ->git switch branchname
+									 ->git switchg main
+->Here main will not be knowing whatever changes we made in another branch feature1
+
+
+->Creating branch using switch command ->git switch -c branch_name
+				       ->git switch -c feature2
+->If we use the command ->git branch --all this shows all the branches available and also theremote branches
+->If want to go back to the previous branch then us the command ->git switch -
+->To delete particular branch use the commands ->git branch -d feature2  or git branch --delete feature2
+
+Merge:
+->To merge two branches,Firstly we need to be there at main branch and then we can merge by using the command ->git merge feature1
+
+Pull:
+->Before merging or modifying first we need to pull latest code from the remote repository using the command ->git pull origin main
+->And then after merging we can push that updates to remote repository using the command ->git push origin main
+
