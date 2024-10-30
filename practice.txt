@@ -1,1 +1,4 @@
 This is for practicing c_c++ programming
+
+
+Step 1:
