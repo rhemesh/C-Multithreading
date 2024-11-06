@@ -1,6 +1,5 @@
 #include<iostream>
 #include<thread>
-#include<mutex>
 
 using namespace std;
 
@@ -23,3 +22,5 @@ int main()
     return 0;
 }
 
+//Here we use join to wait until thread finish its work,
+//If we do not want to wait then use detach that will return control from the thread after calling to main
