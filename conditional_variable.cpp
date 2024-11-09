@@ -11,7 +11,7 @@ mutex m1;
 int balance  = 0;
 void addMoney(int amount)
 {
-    lock_guard<mutex> lock(m1);
+    lock_guard<mutex> lg(m1);
     balance += amount;
     cout<<"Amount "<<amount<<" added to total balance"<<endl;
     cv.notify_one();
