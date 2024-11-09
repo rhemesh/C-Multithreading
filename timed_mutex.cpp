@@ -8,7 +8,25 @@ using namespace std;
 timed_mutex m;
 
 int Amount  = 0;
+/*
+//try_lock_for()
+void Increment(int i)
+{
+    if(m.try_lock_for(chrono::seconds(1)))
+    {
+        ++Amount;
+        std::this_thread::sleep_for(chrono::seconds(1));
+        cout<<"Thread "<<i<<"Entered"<<endl;
+        m.unlock();
+    }
+    else
+    {
+        cout<<"Thread "<<i<<"Could not get the lock"<<endl;
+    }
+}
+*/
 
+//try_lock_until()
 void Increment(int i)
 {
     auto now = std::chrono::steady_clock::now();
