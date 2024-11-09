@@ -65,3 +65,8 @@ int main()
     return 0;
 
 }
+
+//In this program initially,we are Incrementing X and Y values in common function and Consuming using another function.
+//Used three threads 2 threads for icrementing X and Y individually and another thread to consume X and y.
+//used try_lock() to lock multiple threads ,try_lock(m1,m2);
+//if it returns -1 then it confirms that it locked two mutexes m1 and m2.
