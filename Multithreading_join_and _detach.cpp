@@ -15,6 +15,7 @@ int main()
 {
     thread t(func,15);
     cout<<"Main"<<endl;
+    //t.join();
     t.detach();
 
     cout<<"Main finished"<<endl;
