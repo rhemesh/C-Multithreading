@@ -26,3 +26,6 @@ int main()
 
     return 0;
 }
+
+//If we are using mutex lock_guard,It will execute one thread till end it will not give control to another threads till it finishes execution.
+//This will automatically locked when we call lock_guard and no need of unlocking this,It does automatically
