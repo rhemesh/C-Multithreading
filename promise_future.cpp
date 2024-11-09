@@ -28,9 +28,7 @@ int main()
     thread t(FindOddsum,std::move(Oddsum),start,end);
 
     cout<<"Waiting for the result.\n"<<endl;
-
     cout<<"Total Odd sum = "<<futureoddsum.get()<<endl;
-
     cout<<"Finished"<<endl;
 
     return 0;
