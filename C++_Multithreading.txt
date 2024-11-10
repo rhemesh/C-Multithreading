@@ -1,0 +1,242 @@
+Multithreading and Why threading concept is required and where it is used?
+
+->Every application has one process that is called main. Inside main we can have multiple threads.
+->Threads are lightweight.
+->Threads are required to run application parallelly, So that we can reduce execution time of that particular application.
+
+Ex: In browser we can open multiple tabs that is called each tab consist of 1 thread.
+    In word we have multiple threads they are used for modifying size of text and changing font etc., and for auto correction also we use one thread.
+    in Vs code we have intelligence that suggests some text that is done by thread.
+
+Types of creating threads
+
+1.Function pointer
+2.Lamda
+3.Functor(Function Object)
+4.Non static member function
+5.Static member function
+
+Join thread:
+
+->we use join thread to wait for some time to finish thread execution.
+->we cannot use join two times with the same thread->it terminates the program.
+->If we want to check for thread whether it is joined before or not,use condition called if(t.joinable()){t.join()}.
+
+Detach thread:
+
+->after creating new thread, we detach it if we want to detach that thread.so it stops executing that thread for moment and continues with next steps.
+->Both detach cannot be used, it terminates the program.
+->If we want to check for thread whether it is detached before or not, use condition called if(t.joinable()){t.detatch()}.
+
+Either join() or detach should be called after creating thread. Or else it will terminate the program.
+
+Mutex: mutual Execution
+
+->Mutex is used to avoid race condition. we get race condition whenever 2 or more threads are trying to modify the same data then we get race condition.
+->This race condition can be avoided by using mutex lock and unlock.
+->Race condition only occurs if threads are trying to modify same variable data.
+
+
+Introduction to mutex Try lock for one mutex object: 
+
+->whenever we use try_lock()->It will try to lock,it will check for the resourse is free or not.If it is busy it will return false,If it is locked then it returns true.
+->This will not block till previous one finish,It just returns false if any other thread is busy accessing resources.It is called non-blocking. 
+->If try_lock() is called more than one time by same thread then that behaviour is undefined.If we want to call try_lock() more than one time then we can use recursive_lock(); 
+
+Trylock() for multiple mutex objects :
+
+->Trylock: Using try_lock() we can lock multiple objects at a time.Ex:try_lock(m1,m2,m3); 
+->If all the threads are locked then it will return -1,If any thread fails to lock the resourse then it will return 0 based index.
+->It is non blocking call
+*Note:0 based index is nothing but in the above examble if m2 fails to lock resourse then it will return 1 because index starts from 0. If any one object fails to lock then it will release all the locked mutexes.
+
+Timed Mutex:
+
+timed_mutex waits till timeout time and if within that time, previous mutex is unlocked then this will lock and return true after locking and if that time exceeds it returns false.
+
+member functions:
+lock();
+try_lock();
+try_lock_for();
+try_lock_until();
+unlock();
+
+Recursive mutex:
+
+->It is same as mutex but using recursive_mutex() we can call lock()/try_lock() repeatedly by same thread till it finishes the recursion.
+->If T1 is aquired lock for the first time in recursive function then t1 can call lock again and again in recursive_mutex and after completing task of t1.then t2 can access the function.
+->Here we need to unlock() the mutex with the equal number of times that how many time we lock that mutex Eg:If t1 is locked mutex for 10 times then t1 should unlock it for 10 times.It means recursive will count internally that how many times that called lock()/try_lock().
+->It can also be used in loops.
+
+Lock Guard: 
+
+std::lock_guard<mutex> lock(m1);
+
+->It is a light weight wrapper for owning a mutex,this aquires the mutex lock the moment we create lock_gaurd.
+->If t1 is locked then it will finish all the work of t1 and then it releases automatically,instead of giving control to the other threads in between but that is not the case when we are using lock();
+->It will automatically removes lock() while it goes out of scope and we cannot explicitly unlock the lock_gaurd,and cannot be copied.
+
+Unique Lock:std::unique_lock<mutex> lock(m1);
+
+->It is an mutex ownership wrapper.It has a different locking stratagies they are:
+	.defer_lock()  ->Do not aquire ownership of the mutex
+	.try_to_lock() ->try to aquire ownership of the mutex without blocking
+	.adopt_lock()  ->assume that calling thread already has the ownership
+->It supports Time constrained attempts at locking (try_lock_for,try_lock_until)
+->Supports Recursive locking
+->Transfer of lock ownership(only move not copy)
+->Condition variables ->if one thread finishes execution that thread notifies for all the waiting/remaining threads that i have finished executing,then that can start locking mutex.
+
+Conditional Variable:
+
+These condition variable is used for two purposes 
+	i)Notifying other threads 
+	ii)Waiting for some condition
+
+->Condition variable allows running threads to wait for some condition and later once that condition is met then that waiting thread is notified using:
+	.notify_one();
+	.notify_all();
+->We need mutex to use condition variable.
+->If any thread want to wait for some condition then it has to do these things:
+	.Acquire the mutex lock using std::unique_lock<mutex> lock(m1); 
+	.Execute wait ,Wait operation automatically releases the mutex and suspends the execution of the thread.
+	.When the conditional variable is notified ,the thread is awaiked and starts checking for the condition and if the condition is true then execution continues and once it is completed then it will automatically release the lock.
+->Condition variable is used to synchronize two or more threads.
+
+Deadlock():
+
+->We face deadlock situation whenever for Eg: If we have two threads and two resources.If t1 locks r1 and t2 locks r2 and later again if t1 tries to lock r2 by holding r1 and that r2 will be already locked with t2 and viceversa for t2 then it creates deadlock. 
+
+Thread synchronozation:
+
+->Thread or process synchronize to access critical section.
+->Critical section is the one or more statements of the program that can be executed by only one thread or process at a time.
+->when both thread try to modify the critical section statement then we face race condition.that can be avoided by using mutex to synchronize it.
+->Using mutex lock() and unlock we can synchronize threads or process.
+->If we try to read the same variable or statement at a time by same thread then that won't be any problem,whenever if we want to modify then that comes as a critical section.
+
+
+Difference between try_lock(m1,m2) and std lock(m1,m2):
+
+Both are used to lock multiple mutexes ata atime but trylock will not block,It just checks for lock if it gets lock for all the mutexes then it returns true 
+but in std lock it blocks till it gets the lock for all the mutexes.It ensures that no deadlock is arised.
+
+
+std lock:
+
+->It is used to lock multiple mutexes at a same time
+	syntax:std::lock(m1,m2);
+->All arguments are locked via sequence of calls to lock() ,try_lock() and unlock() for each argument.
+->Make sure that std lock will not lock the mutexes in the same order which you have given,this will lock randomly and ensures that it will not create deadlock.
+->It is a blocking call
+
+
+Promise and Future:
+
+->std::promise and std::future
+->promise:used to set values or exceptions
+->Future:used to get values from promise,Ask promise it that value is available and wait for promise 
+
+
+std async:
+
+->It runs a function in asynchronously (Potentially in new thread) and returns a future that holds the result.
+->There are three lauching polices for creating a task.
+	std::launch_async
+	std::lauch_differed
+	std::launch_async | std::launch_differed
+->It automatically creates thread internally and promises object for us.
+->Then passes the promise object to thread function and returns the associated future object
+->when our passed argument function exist then it's value will be set in this promise object,so eventually return value will be available in future object.
+->we can send functor and lambda function as callback to std::async,It will work the same.
+->In this no need of using promise that will take care automatically by std::async and we only need to use future.
+->if we are using async then it creates thread and if we use differed it will not create the thread.
+
+
+Producer and Consumer Problem:
+
+->Producer will produce and consumer will consume with synchronization of a common buffer
+->Until producer thread produce data consumer thread cannot consume
+->Threads will use condition_variable to notify each other
+->we need mutex if we are using conditional variable because conditional variable waits on mutex
+
+Producer:
+->Lock mutex,if success then go ahead otherwise wait for mutex to get free
+->Check if buffer is full,if it is full then unlock mutex and wait for consumer to consume,If is not full then  go ahead to produce
+->Insert item in buffer
+->unlock mutex
+->notify consumer
+
+Consumer:
+->Lock mutex,If it is success go ahead otherwise wait for mutex to get free.
+->Check if the buffer is empty,If it is empty then unlock the mutex and sleep,If is not empty then go ahead and consume
+->Consume item from Buffer
+->Unlock mutex
+->notify producer
+
+Producer and consumer have to notify each other upon completion of their job.
+
+
+Difference Between Sleep() and wait():
+
+Sleep():
+->Sleep will tell os that i am done with my timeslice,don't give another one for at least n milli seconds
+->The Os will not even try to schedule another task until requested time passed
+->Sleep will keep the lock and sleep for n number of milli seconds and after finishing that n number of ms sleep, it will awake automatically
+->sleep is directly to thread,It is thread function
+
+Wait():
+->Wait tells OS that i'm done with my timeslice,please don't give me an another timeslice until someone notifies  using notify_one()/notify_all()
+->The Os will not even schedule any another task until someone notifies or any other some wakeup scenarios occur
+->wait will release lock and waits
+->wait is on condition variable,it waits using cv and It is applied to the conditional variable but it ends up putting thread in waiting state
+
+
+
+Using static variable by thread:
+
+->using static variable is not safe in thread,If we want to use static variable we should use mutex to get correct output.
+
+Binary Semaphore:
+
+->Semaphore is for signaling and mutex is used for ownership.
+->It is one type of notifying/signaling each other using binary semapore using acquire and release.
+->Initially semaphores will be in blocked state ie 0.but in the case of mutex.mutex will start running once it is acquired lock.
+
+Difference between Semaphore and mutex:
+Both are used for synchronizing resourses
+Mutex:
+->It allows one thread to go inside critical section
+->It has two states ->lock/unlock
+->It is locking mechanism
+->Multiple threads are trying to access 1 resourse,only one thread gets chance at a time
+
+
+Semaphore:
+->It allows multiple threads inside critical section,Resourse is divided into mutiple sections.so,Each thread can have their own section
+->It maintains count for each thread,because it allows collection of threads with certain limit
+->It is a signaling mechanism
+->Multiple threads are trying to access multiple resources.
+
+Producer_consumer using semaphore:
+->Here producer will start producer_semaphore with 1 because it should start producing 1st and consumer semaphore is kept 0 initially so that it waits till producer produces.and later consumer_semaphore release.
+->Release means doing incrementation ie 0 to 1 incrementation.
+->Acquire will reduce from 1 to 0 .
+
+
+
+Thread Pool:
+->Thread pool is like having poool of threads.
+->Multiple threads will be waiting to assign the task,whenever we try to assign the assign it will start executing.
+->Instead of creating thread and deleting everytime,we can use thread pool to assign the task and making it finish.
+
+Scoped_lock():
+
+->using scoped lock we can lock multiple mutexes at a time and to avoid deadlock it uses std_lock mechanism internally.
+->no need to unlock() after locking and once we crete scoped lock it automatically locks.
+
+
+
+
+ 
+
