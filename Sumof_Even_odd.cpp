@@ -62,3 +62,7 @@ int main()
     return 0;
 
 }
+
+//Here we are adding sum of even and odd numbers and calculating the time.
+//Using function it takes more time to calculate even and odd sum because it calls the function one after the other but 
+//If we are using threads then the process runs the both functions concurrently so we can reduce the execution time by using threads which runs asynchronously
